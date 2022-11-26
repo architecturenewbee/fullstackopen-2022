@@ -1,19 +1,24 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import Filter from "./components/Filter";
 import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", number: "040-123456", id: 1 },
-    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
-    { name: "Dan Abramov", number: "12-43-234345", id: 3 },
-    { name: "Mary Poppendieck", number: "39-23-6423122", id: 4 },
-  ]);
-  const [filteredPerson, setFilteredPerson] = useState(persons);
+  const [persons, setPersons] = useState([]);
+  const [filteredPerson, setFilteredPerson] = useState([]);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+
+  const hook = () => {
+    axios.get("http://localhost:3001/persons").then((response) => {
+      console.log(response.data);
+      setPersons(response.data);
+      setFilteredPerson(response.data);
+    });
+  };
+  useEffect(hook, []);
   const addName = (event) => {
     event.preventDefault();
     const result = persons.some((person) => person.name === newName);
@@ -41,7 +46,7 @@ const App = () => {
   const handleNumberChange = (event) => {
     const value = event.target.value;
     setNewNumber(value);
-  }
+  };
 
   const handleFilterName = (event) => {
     setFilterName(event.target.value);
@@ -54,10 +59,16 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filterName={filterName} handleFilterName={handleFilterName}/>
-      <PersonForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} addDetails={addName}/>
+      <Filter filterName={filterName} handleFilterName={handleFilterName} />
+      <PersonForm
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addDetails={addName}
+      />
       <h2>Numbers</h2>
-      <Person persons={filteredPerson}/>
+      <Person persons={filteredPerson} />
     </div>
   );
 };
