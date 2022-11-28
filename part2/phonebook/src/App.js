@@ -2,6 +2,7 @@ import { useState } from "react";
 import Filter from "./components/Filter";
 import Person from "./components/Person";
 import PersonForm from "./components/PersonForm";
+import UpdateForm from "./components/UpdateForm"
 
 const App = () => {
   const [persons, setPersons] = useState([
@@ -14,22 +15,27 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filterName, setFilterName] = useState("");
+  const [newPerson, setNewPerson] = useState({ name: '', number: '' });
+  const [personCopy, setCopy] = useState([
+    { name: "Arto Hellas", number: "040-123456", id: 1 },
+    { name: "Ada Lovelace", number: "39-44-5323523", id: 2 },
+  ]);
   const addName = (event) => {
     event.preventDefault();
-    const result = persons.some((person) => person.name === newName);
+    const result = persons.some((person) => person.name === newPerson.name);
     if (result) {
-      alert(`${newName} is already added to phonebook`);
+      alert(`${newPerson.name} is already added to phonebook`);
       return;
     }
     let obj = {
-      name: newName,
-      number: newNumber,
+      ...newPerson,
       id: persons.length + 1,
     };
     setPersons(persons.concat(obj));
     setFilterName("");
     setNewName("");
     setNewNumber("");
+    setNewPerson({name:'',number:''})
     setFilteredPerson([...filteredPerson, obj]);
   };
 
@@ -51,13 +57,34 @@ const App = () => {
       )
     );
   };
+
+  const handleNewPerson = (event) => {
+    const { name, value } = event.target;
+    setNewPerson({ ...newPerson, [name]: value });
+  }
+
+  const handleEdit = (event) => {
+    console.log("will edit", event.target.value);
+    const { name, value } = event.target;
+    setCopy({...personCopy});
+  }
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter filterName={filterName} handleFilterName={handleFilterName}/>
-      <PersonForm newName={newName} newNumber={newNumber} handleNameChange={handleNameChange} handleNumberChange={handleNumberChange} addDetails={addName}/>
+      <Filter filterName={filterName} handleFilterName={handleFilterName} />
+      <PersonForm
+        newPerson={newPerson}
+        handleNewPerson={handleNewPerson}
+        newName={newName}
+        newNumber={newNumber}
+        handleNameChange={handleNameChange}
+        handleNumberChange={handleNumberChange}
+        addDetails={addName}
+      />
       <h2>Numbers</h2>
-      <Person persons={filteredPerson}/>
+      <Person persons={filteredPerson} />
+      <h2>Update</h2>
+      <UpdateForm valuePerson={personCopy} handleEdit={handleEdit} />
     </div>
   );
 };
