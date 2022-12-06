@@ -1,9 +1,5 @@
 const PersonForm = ({
-  newName,
-  newNumber,
   newPerson,
-  handleNameChange,
-  handleNumberChange,
   handleNewPerson,
   addDetails,
 }) => {
