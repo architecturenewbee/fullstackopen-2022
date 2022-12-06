@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 import Note from "./components/Note";
+import Notification from "./components/Notification";
 import noteService from "./service/Note"
 const App = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNotes] = useState("a new note....");
   const [showAll, setShowAll] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("some error happened...");
 
   useEffect(() => {
     noteService.getAll().then(data => {
@@ -49,6 +51,7 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <Notification message={errorMessage} />
       <button onClick={() => setShowAll(!showAll)}>
         show {showAll ? "important" : "all"}
       </button>

@@ -13,11 +13,13 @@ const addNewPersons = (newObject) => {
 };
 
 const deletePerson = (id) => {
-  return axios.delete(`${baseUrl}/${id}`).then(() => getAllPersons());
+  //   return axios.delete(`${baseUrl}/${id}`).then(() => getAllPersons());
+  const request = axios.delete(`${baseUrl}/${id}`);
+  return request.then((resposne) => resposne.data);
 };
 
 const updateNumber = (id, object) => {
-    const request = axios.put(`${baseUrl}/${id}`, object);
-    return request.then(response => response.data);
+  const request = axios.put(`${baseUrl}/${id}`, object);
+  return request.then((response) => response.data);
 };
 export default { getAllPersons, addNewPersons, deletePerson, updateNumber };
